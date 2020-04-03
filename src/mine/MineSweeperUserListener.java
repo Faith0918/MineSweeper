@@ -36,12 +36,24 @@ public class MineSweeperUserListener implements ActionListener, MouseListener{
 
 	public void mouseReleased(MouseEvent e) {
 		Point p = e.getPoint();
+		Cell cell = convertPointToCell(p.x, p.y);
+		//TODO 
 		if(e.getButton() == MouseEvent.BUTTON1){
-			core.discover(p);
+			
+			core.discover(cell);
 		}else if(e.getButton() == MouseEvent.BUTTON3){
-			core.checkMine(p);
+			
+			core.checkMine(cell);
 		}
 		
+	}
+	private Cell convertPointToCell(double x, double y) {
+		
+		int cellx = 0,celly = 0;
+		cellx = (int)(x/20);
+		celly = (int)(y/20);
+		Cell c = core.getCell(cellx,celly);
+		return c;
 	}
 
 }

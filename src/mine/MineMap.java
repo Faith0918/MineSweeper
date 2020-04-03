@@ -1,5 +1,6 @@
 package mine;
 
+import java.util.Random;
 
 public class MineMap {
 	Cell[][] mapArray;
@@ -47,10 +48,21 @@ public class MineMap {
 	}
 
 	private void assignMines() {
-		
-		for(int i=0;i<size;i++) {
-			mapArray[i][i] = new Cell(i, i, Cell.Mine);
+		int num = 0;
+		Random random = new Random();
+		while(num<30) {
+			int x = random.nextInt(20);
+			int y = random.nextInt(20);
+			if(mapArray[x][y] != null){
+				continue;
+			}
+			else {
+				mapArray[x][y] = new Cell(x, y, Cell.Mine); 
+				num++;
+			}
 		}
+		
+
 	}
 
 	private void newMapArray() {

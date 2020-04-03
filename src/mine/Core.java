@@ -32,28 +32,31 @@ public class Core {
 	}
 
 
-	public void discover(Point p) {
-		double x = p.getX();
-		double y = p.getY();
-		
-		Cell c = convertPointToCell(x,y);
-		System.out.println("c_x : "+ c.getX());
+	public void discover(Cell c) {
 		discoverCell(c);
-		
 	}
 
 
 	private void discoverCell(Cell c) {
-		Point p = new Point(c.getX(),c.getY());
-		ViewElement viewElement = new ViewElement(p.x, p.y, c.getState());
+		ViewElement viewElement = new ViewElement(c.getX(), c.getY(), c.getState());
 		viewElement.setProperty(c.getProperty());
 		switch(c.getProperty()){
-		case 0 : discoverAround(p); view.changeViewModel(c); view.drawMap();
+		case 0 : 
+			c.setState(Cell.Opend); 
+			view.changeViewModel(c); 
+			view.drawMap();
+			flipAround(c);
+			break;
 		case 9 : gameOver();
-		default : c.setState(Cell.Opend); view.changeViewModel(c); view.drawMap();
+		default : 
+			System.out.println("default");
+			c.setState(Cell.Opend); 
+			view.changeViewModel(c); 
+			view.drawMap(); 
+			break;
 					
 		}
-		System.out.println("c state " + c.getState());
+//		System.out.println("c state " + c.getState());
 	}
 
 
@@ -62,41 +65,43 @@ public class Core {
 	}
 
 
-	private Cell convertPointToCell(double x, double y) {
-		
-		int cellx = 0,celly = 0;
-		cellx = (int)(x/20);
-		celly = (int)(y/20);
-		Cell c = map.get(cellx,celly);
-		return c;
-	}
+	
 
 
-	public void checkMine(Point p) {
-		double x = p.getX();
-		double y = p.getY();
-		
-		Cell c = convertPointToCell(x,y);
-		c.setState(Cell.Checked);
+	public void checkMine(Cell c) {
+		if(c.getState() == Cell.Closed) {
+			c.setState(Cell.Checked);
+		}
+		else if(c.getState() == Cell.Checked){
+			c.setState(Cell.Closed);
+		}
 		view.changeViewModel(c);
+		view.drawMap();
 	}
-	public void discoverAround(Point p){
-		
-		Cell c = convertPointToCell(p.getX(),p.getY());
+	
+	public void discoverAround(Cell c){
+		if(checkSatisfaction(c)){
+			flipAround(c);
+		}
+	}
+
+
+	private void flipAround(Cell c) {
 		int cellx = c.getX();
 		int celly = c.getY();
-		
-		if(checkSatisfaction(c)){
-			int[] dx = {0, 0, 1, 1, 1, -1, -1, -1};
-			int[] dy = {1, -1, 0, -1, 1, 0, -1, 1};
-			for( int i = 0; i<8; i++) {
+		int[] dx = {0, 0, 1, 1, 1, -1, -1, -1};
+		int[] dy = {1, -1, 0, -1, 1, 0, -1, 1};
+		for( int i = 0; i<8; i++) {
+			if(cellx + dx[i]>=0 && cellx + dx[i]<20 && celly + dy[i]>=0 && celly + dy[i]<20) {
 				Cell temp = map.get(cellx + dx[i],celly + dy[i]);
-				if(temp.getState() == Cell.Closed) {
+				
+				if(temp.getState() == Cell.Closed && temp.getProperty() == 0) {
+					System.out.println("dA");
 					discoverCell(temp);
 				}
 			}
+			
 		}
-		
 		
 	}
 
@@ -122,6 +127,9 @@ public class Core {
 		else {
 			return false;
 		}
+	}
+	public Cell getCell(int x, int y) {
+		return map.get(x, y);
 	}
 
 

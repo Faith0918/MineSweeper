@@ -28,7 +28,7 @@ public class DrawComponent extends JComponent{
 					g.setColor(Color.black);
 					g.drawRect(r*20, c*20, 20, 20);
 				}
-				else {
+				else if(cellView[r][c].getState() == Cell.Opend){
 					
 					switch(cellView[r][c].getProperty()) {
 					
@@ -79,11 +79,14 @@ public class DrawComponent extends JComponent{
 						case 9: 
 							g.setColor(Color.RED); 
 							g.fillRect(r*20, c*20, 20, 20);
-							System.out.println("red" + cellView[r][c].getProperty());
 							break;
 						default:
 					}
 						
+				}
+				else {
+					g.setColor(Color.green);
+					g.fillRect(r*20, c*20, 20, 20);
 				}
 				
 			}
