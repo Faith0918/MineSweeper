@@ -23,19 +23,20 @@ public class MineMap {
 //		}
 		for(r=0; r<size;r++) {
 			for(c=0;c<size;c++) {
-				if(mapArray[r][c] != null) {
+				if(mapArray[r][c] == null) {
 					int property = 0;
 					for(int i=0;i<8;i++) {
 						if(r+dr[i]<0||c+dc[i]<0||r+dr[i]>=size||c+dc[i]>=size) {
 							continue;
 						}
 						else {
-							if(mapArray[r+dr[i]][c+dc[i]] != null&&mapArray[r+dr[i]][c+dc[i]].getProperty() == Cell.Mine) {
+							if(mapArray[r+dr[i]][c+dc[i]] != null && mapArray[r+dr[i]][c+dc[i]].getProperty() == Cell.Mine) {
 								property++;
 							}
 						}
 					}
 					mapArray[r][c] = new Cell(r, c, property);
+					
 				}
 				
 				

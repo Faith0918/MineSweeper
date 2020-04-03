@@ -1,7 +1,7 @@
 package mine;
 
-import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
 import javax.swing.JButton;
@@ -9,39 +9,61 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class View extends JFrame{
-	JPanel resetPanel = new JPanel();
-	JPanel mapPanel = new JPanel();
-	JButton resetButton = new JButton();
-	JButton mapButton[][] = new JButton[20][20];
+	JPanel resetPanel;
+	JPanel mapPanel;
+	JButton resetButton;
+	DrawComponent cmp;
+
 	
 	public View() {
 		setTitle("MineSweeper");
-		this.init();
-		this.start();
-		this.setSize(540,625);
+		this.setSize(425,490);
+		this.setLayout(new BorderLayout());
+		resetPanel = new JPanel();
+		mapPanel = new JPanel();
+		resetButton = new JButton("restart");
+		resetPanel.add(resetButton);
+		cmp = new DrawComponent();
+		mapPanel.add(cmp);
+		this.add(resetPanel, BorderLayout.NORTH);
+		this.add(cmp, BorderLayout.CENTER);
 		setVisible(true);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 	}
 	
+	public void addListener(MineSweeperUserListener listener) {
+		resetButton.addActionListener(listener);
+		cmp.addMouseListener(listener);
+	}
+
+	public void changeViewModel(Cell cell) {
+		ViewElement changedElement = new ViewElement(cell.getX(), cell.getY(), cell.getState());
+		changedElement.setProperty(cell.getProperty());
+		ViewElement[][] viewModel = cmp.getViewModel();
+		viewModel[cell.getX()][cell.getY()] = changedElement;
+		cmp.setViewModel(viewModel);
+	}
 	
-	private void init() {
-//		this.setLayout(new GridLayout(20,20));
-		for(int i=0;i<20;i++) {
-			for(int j=0;j<20;j++) {
-				mapButton[i][j] = new JButton();
-				mapButton[i][j].setPreferredSize(new Dimension(20,20));
-				mapButton[i][j].addMouseListener(new MineSweeperUserListener());
-				mapButton[i][j].addActionListener(new MineSweeperUserListener());
-				mapButton[i][j].setBackground(Color.DARK_GRAY);
-				mapPanel.add(mapButton[i][j]);
+	public void resetViewModel() {
+		ViewElement[][] viewModel = new ViewElement[20][20];
+		for(int r = 0; r < 20 ; r++) {
+			for(int c = 0; c < 20; c++) {
+				viewModel[r][c] = new ViewElement(r, c, Cell.Closed);
 			}
 		}
-		this.add(mapPanel);
+		cmp.setViewModel(viewModel);
 	}
-
-
-	private void start() {
-	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
+	public void drawMap() {
+		cmp.repaint();
+	}
+	
+	
+
+	public void showAllMine() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

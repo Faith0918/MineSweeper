@@ -8,7 +8,9 @@ import java.awt.event.MouseListener;
 
 public class MineSweeperUserListener implements ActionListener, MouseListener{
 	private Core			core;
-	
+	public MineSweeperUserListener(Core core) {
+		this.core = core;
+	}
 	public void actionPerformed(ActionEvent e) {
 		 if(e.getActionCommand().equals("new")){
 			 core.startNewGame();
@@ -36,7 +38,7 @@ public class MineSweeperUserListener implements ActionListener, MouseListener{
 		Point p = e.getPoint();
 		if(e.getButton() == MouseEvent.BUTTON1){
 			core.discover(p);
-		}else if(e.getButton() == MouseEvent.BUTTON2){
+		}else if(e.getButton() == MouseEvent.BUTTON3){
 			core.checkMine(p);
 		}
 		
